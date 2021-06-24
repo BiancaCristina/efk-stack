@@ -102,6 +102,7 @@
   </dependencies>
 
   <build>
+    <finalName>efk</finalName>
     <plugins>
       <plugin>
         <groupId>io.micronaut.build</groupId>

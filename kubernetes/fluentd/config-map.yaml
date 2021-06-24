@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd
+  namespace: kube-system
+data:
+  fluent.conf: |-
+
+    <source>
+      @type tail
+      @id in_tail_container_logs
+      path "/var/log/containers/efk*.log"
+      pos_file "/var/log/fluentd-containers.log.pos"
+      tag efk
+      read_from_head true
+      <parse>
+        @type regexp
+        expression /LogRecord\((type=(?<type>[^\"][\W\s\w\[\]`!@#$%\^&*()={}:;<>+'-]*)?, uuid=(?<uuid>[^\"][\W\s\w\[\]`!@#$%\^&*()={}:;<>+'-]*)?, created=(?<created>[^\"][\W\s\w\[\]`!@#$%\^&*()={}:;<>+'-]*)?)\)/
+        time_format %Y-%m-%dT%H:%M:%S.%NZ
+      </parse>
+    </source>
+
+    <match efk>
+      @type elasticsearch
+      @id out_es
+      @log_level info
+      include_tag_key true
+      host "#{ENV["FLUENT_ELASTICSEARCH_HOST"]}"
+      port "#{ENV["FLUENT_ELASTICSEARCH_PORT"]}"
+      scheme "#{ENV["FLUENT_ELASTICSEARCH_SCHEME"]}"
+      ssl_verify true
+      reload_connections true
+      index_name ${tag}-%Y-%m
+      type_name fluentd
+      include_timestamp true
+
+      <buffer tag, time>
+        @type memory
+        timekey 3600
+      </buffer>
+    </match>

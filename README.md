@@ -1,12 +1,28 @@
-## Micronaut 2.4.0 Documentation
+# EFK Stack: Logs Beyond Debugging
 
-- [User Guide](https://docs.micronaut.io/2.4.0/guide/index.html)
-- [API Reference](https://docs.micronaut.io/2.4.0/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/2.4.0/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
----
+## Article
+Work in progress
 
-## Feature http-client documentation
+## Try it yourself
+To setup the EFK stack, just run:
+```bash
+kubectl create -f kubernetes/namespace
+kubectl create -f kubernetes/elastic
+kubectl create -f kubernetes/kibana
+kubectl create -f kubernetes/fluentd
+```
 
-- [Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
+To start the application, run:
+```bash
+mvn clean package
+docker build -t efk:v1 .
+kubectl create deployment efk --image=efk:v1 -n efk
+kubectl expose deployment efk --type=NodePort --port=8080 -n efk
+```
 
+## References
+- [Logging in Kubernetes with Elasticsearch, Kibana, and Fluentd](https://mherman.org/blog/logging-in-kubernetes-with-elasticsearch-Kibana-fluentd/)
+- [Running Apache Kafka on Minikube](https://technology.amis.nl/platform/kubernetes/running-apache-kafka-on-minikube/)
+- [minikube-kafka-cluster](https://github.com/d1egoaz/minikube-kafka-cluster)
+- [bitnami-docker-zookeeper](https://github.com/bitnami/bitnami-docker-zookeeper/blob/master/README.md)
+- [bitnami-docker-kafka](https://github.com/bitnami/bitnami-docker-kafka/blob/master/README.md)
