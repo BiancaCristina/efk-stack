@@ -1,7 +1,7 @@
 # EFK Stack: Logs Beyond Debugging
 
 ## Article
-Work in progress
+- [EFK Stack: Logs Além da Depuração](https://biahyonce.medium.com/efk-stack-logs-al%C3%A9m-da-depura%C3%A7%C3%A3o-672adeed606b)
 
 ## Try it yourself
 To setup the EFK stack, just run:
